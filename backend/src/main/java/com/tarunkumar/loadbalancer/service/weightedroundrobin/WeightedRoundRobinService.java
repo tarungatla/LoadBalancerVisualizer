@@ -58,27 +58,17 @@ public class WeightedRoundRobinService implements LoadBalancerService {
         }
 
         int attempts = 0;
-        while (attempts < totalWeight) {
-            // If current server has reached its assigned weight, move to the next one
-            if (counters.get(currentIndex) < weights.get(currentIndex)) {
-                Server server = serverList.get(currentIndex);
-
-                if (server.getWeight() > server.getActiveConnections()) {
-                    counters.set(currentIndex, counters.get(currentIndex) + 1);
-                    return server.assignRequest();
-                }
+        while (attempts < noOfServers) {
+            Server server = serverList.get(currentIndex);
+            if (server.getActiveConnections() < server.getWeight()) {
+                return server.assignRequest();
             }
 
             currentIndex = (currentIndex + 1) % noOfServers;
             attempts++;
 
-            // Reset all counters if we've looped over totalWeight times
-            if (attempts == totalWeight) {
-                for (int i = 0; i < counters.size(); i++) {
-                    counters.set(i, 0);
-                }
-            }
         }
+
 
         System.out.println("All servers are at full capacity.");
         return -1;
