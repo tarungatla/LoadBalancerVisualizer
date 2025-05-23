@@ -7,8 +7,10 @@ export default function Home() {
   const [numServers, setNumServers] = useState(5);
   const [weights, setWeights] = useState(Array(numServers).fill(0).map((_, i) => i + 1));
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  
   const handleInitialize = async () => {
-    const url = `http://localhost:8080/api/loadbalancer/initialize/${algorithm}/${numServers}`;
+    const url = `${baseUrl}/api/loadbalancer/initialize/${algorithm}/${numServers}`;
     try {
       const response = await fetch(url, {
         method: 'POST',

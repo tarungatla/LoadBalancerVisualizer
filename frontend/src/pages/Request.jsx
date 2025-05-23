@@ -10,6 +10,7 @@ export default function RequestPage() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const baseUrl = import.meta.env.VITE_API_BASE_URL;
     useEffect(() => {
         if (numServers) {
             setServerRequests(Array.from({ length: parseInt(numServers, 10) }, () => []));
@@ -20,7 +21,7 @@ export default function RequestPage() {
         if (isLoading) return; // Prevent multiple requests
         setIsLoading(true);
 
-        const url = `http://localhost:8080/api/loadbalancer/request/${algorithm}`;
+        const url = `${baseUrl}/api/loadbalancer/request/${algorithm}`;
         try {
             const response = await fetch(url, { method: 'POST' });
 
